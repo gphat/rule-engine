@@ -7,6 +7,20 @@ Rule::Engine::Rule - A Rule Engine Rule
 
 =head1 ATTRIBUTES
 
+=head2 condition
+
+=cut
+
+has 'condition' => (
+    is => 'rw',
+    isa => 'CodeRef',
+    traits => [ 'Code' ],
+    required => 1,
+    handles => {
+        execute => 'execute'
+    }
+);
+
 =head2 description
 
 Text describing this rule.
@@ -45,7 +59,6 @@ by the Free Software Foundation; or the Artistic License.
 See http://dev.perl.org/licenses/ for more information.
 
 =cut
-
 
 __PACKAGE__->meta->make_immutable;
 no Moose;
