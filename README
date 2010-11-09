@@ -2,8 +2,6 @@ NAME
     Rule::Engine - A Rule Engine
 
 SYNOPSIS
-    Quick summary of what the module does.
-
         use Rule::Engine::Filter;
         use Rule::Engine::Rule;
         use Rule::Engine::RuleSet;

@@ -11,8 +11,6 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
     use Rule::Engine::Filter;
     use Rule::Engine::Rule;
     use Rule::Engine::RuleSet;
