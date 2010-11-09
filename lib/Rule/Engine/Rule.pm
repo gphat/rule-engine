@@ -7,7 +7,25 @@ Rule::Engine::Rule - A Rule Engine Rule
 
 =head1 ATTRIBUTES
 
+=head2 action
+
+The action that this rule will perform if it's condition is met.
+
+=cut
+
+has 'action' => (
+    is => 'rw',
+    isa => 'CodeRef',
+    traits => [ 'Code' ],
+    required => 1,
+    handles => {
+        execute => 'execute'
+    }
+);
+
 =head2 condition
+
+The condition which must be met for this rule's action to be fired.
 
 =cut
 
@@ -17,7 +35,7 @@ has 'condition' => (
     traits => [ 'Code' ],
     required => 1,
     handles => {
-        execute => 'execute'
+        evaluate => 'execute'
     }
 );
 
@@ -43,6 +61,18 @@ has 'name' => (
     isa => 'Str',
     required => 1
 );
+
+=head1 METHODS
+
+=head2 evaluate
+
+Executes this Rule's C<condition>.
+
+=head2 execute
+
+Executes this Rule's C<action>.
+
+=cut
 
 =head1 AUTHOR
 

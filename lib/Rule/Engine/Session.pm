@@ -18,52 +18,45 @@ has 'environment' => (
     default => sub { {} }
 );
 
-=head2 filter
-
-=cut
-
-has 'filter' => (
-    is => 'rw',
-    isa => 'Rule::Engine::Filter',
-    predicate => 'has_filter'
-);
-
 =head2 rules
 
-An array of rules.
+A hash of rules.
 
 =cut
 
-has 'rules' => (
+has 'rulesets' => (
     is  => 'rw',
-    isa => 'ArrayRef[Rule::Engine::Rule]',
-    traits => [ 'Array' ],
-    default => sub { [] },
+    isa => 'HashRef[Rule::Engine::RuleSet]',
+    traits => [ 'Hash' ],
+    default => sub { {} },
     handles => {
-        add_rule => 'push',
-        rule_count => 'count'
+        add_ruleset => 'set',
+        get_ruleset => 'get',
+        ruleset_count => 'count'
     }
 );
 
 =head1 METHODS
 
-=head2 add_rule($rule)
+=head2 add_ruleset($name, $ruleset)
 
-Add a rule
+Add a ruleset.
 
-=head2 execute(\@objects)
+=head2 execute($ruleset, \@objects)
 
 Execute the rules against the objects provided
 
 =cut
 
 sub execute {
-    my ($self, $objects) = @_;
+    my ($self, $name, $objects) = @_;
 
     die 'Must supply some objects' unless defined($objects);
 
-    # No sense doing nothing!
-    return $objects if $self->rule_count == 0;
+    my $rs = $self->get_ruleset($name);
+    unless(defined($rs)) {
+        die "Uknown RuleSet: $name";
+    }
 
     if(ref($objects) ne 'ARRAY') {
         my @objs = ( $objects );
@@ -71,19 +64,23 @@ sub execute {
     }
 
     foreach my $obj (@{ $objects }) {
-        foreach my $rule (@{ $self->rules }) {
+        foreach my $rule (@{ $rs->rules }) {
             $rule->execute($self, $obj);
         }
     }
 
-    return $objects unless $self->has_filter;
+    return $objects unless $rs->has_filter;
     my @returnable = ();
     foreach my $obj (@{ $objects }) {
-        push(@returnable, $obj) if($self->filter->check($obj));
+        push(@returnable, $obj) if($rs->filter->check($obj));
     }
 
     return \@returnable;
 }
+
+=head2 get_ruleset($name)
+
+Gets the RuleSet (if it exists) with the specified name.
 
 =head2 rule_count
 
