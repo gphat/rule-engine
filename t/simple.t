@@ -42,6 +42,6 @@ my $tribble1 = Tribble->new(favorite_temp => 65);
 my $tribble2 = Tribble->new(favorite_temp => 70);
 my $foo = $sess->execute('find-happy-tribbles', [ $tribble1, $tribble2 ]);
 
-cmp_ok(scalar(@{ $foo }), '==', 1, 'got 1 happy tribble');
+is(@{ $foo }, 1, 'got 1 happy tribble');
 
 done_testing;
