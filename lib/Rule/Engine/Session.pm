@@ -65,7 +65,7 @@ sub execute {
 
     foreach my $obj (@{ $objects }) {
         foreach my $rule (@{ $rs->rules }) {
-            $rule->execute($self, $obj);
+            $rule->execute($self, $obj) if $rule->evaluate($self, $obj);
         }
     }
 

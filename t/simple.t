@@ -23,12 +23,12 @@ my $rs = Rule::Engine::RuleSet->new(
 my $rule = Rule::Engine::Rule->new(
     name => 'temperature',
     action => sub {
-        my ($env, $foo) = @_;
-        $foo->happy(1);
+        my ($env, $obj) = @_;
+        $obj->happy(1);
     },
     condition => sub {
-        my ($env, $foo) = @_;
-        return $foo->favorite_temp == $sess->get_environment('temperature');
+        my ($env, $obj) = @_;
+        return $obj->favorite_temp == $env->get_environment('temperature');
     }
 );
 
@@ -38,8 +38,9 @@ $sess->add_ruleset($rs->name, $rs);
 
 cmp_ok($sess->ruleset_count, '==', 1, 'ruleset_count');
 
-my $tribble = Tribble->new;
-my $foo = $sess->execute('find-happy-tribbles', [ $tribble ]);
+my $tribble1 = Tribble->new(favorite_temp => 65);
+my $tribble2 = Tribble->new(favorite_temp => 70);
+my $foo = $sess->execute('find-happy-tribbles', [ $tribble1, $tribble2 ]);
 
 cmp_ok(scalar(@{ $foo }), '==', 1, 'got 1 happy tribble');
 

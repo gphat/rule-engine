@@ -13,12 +13,50 @@ our $VERSION = '0.01';
 
 Quick summary of what the module does.
 
-Perhaps a little code snippet.
+    use Rule::Engine::Filter;
+    use Rule::Engine::Rule;
+    use Rule::Engine::RuleSet;
+    use Rule::Engine::Session;
 
-    use Rule::Engine;
+    my $sess = Rule::Engine::Session->new;
+    $sess->set_environment('temperature', 65);
 
-    my $foo = Rule::Engine->new();
-    ...
+    # Make a ruleset
+    my $rs = Rule::Engine::RuleSet->new(
+        name => 'some-rule',
+        filter => Rule::Engine::Filter->new(
+            condition => sub {
+                # Check something here.  Any object that returns true will
+                # be kept.
+                shift->happy ? 1 : 0
+            }
+        )
+    );
+
+    # Make a rule to add to the set.  This rule's condition will be executed
+    # for each object.  If it returns a true value then the action will be
+    # executed for each object.
+    my $rule = Rule::Engine::Rule->new(
+        name => 'temperature',
+        action => sub {
+            my ($env, $obj) = @_;
+            $obj->happy(1);
+        },
+        condition => sub {
+            my ($env, $obj) = @_;
+            return $foo->favorite_temp == $env->get_environment('temperature');
+        }
+    );
+
+    # Add the rule
+    $rs->add_rule($rule);
+
+    # Add the ruleset to the session
+    $sess->add_ruleset($rs->name, $rs);
+
+    # Execute the rule, getting back an arrayref of objects that passed the
+    # filter after running through all the rules whose conditions were met
+    my $results = $sess->execute('some-rule', \@list_of_objects);
 
 =head1 AUTHOR
 

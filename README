@@ -1,55 +1,64 @@
-Rule-Engine
+NAME
+    Rule::Engine - A Rule Engine
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+SYNOPSIS
+    Quick summary of what the module does.
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+        use Rule::Engine::Filter;
+        use Rule::Engine::Rule;
+        use Rule::Engine::RuleSet;
+        use Rule::Engine::Session;
 
+        my $sess = Rule::Engine::Session->new;
+        $sess->set_environment('temperature', 65);
 
-INSTALLATION
+        # Make a ruleset
+        my $rs = Rule::Engine::RuleSet->new(
+            name => 'some-rule',
+            filter => Rule::Engine::Filter->new(
+                condition => sub {
+                    # Check something here.  Any object that returns true will
+                    # be kept.
+                    shift->happy ? 1 : 0
+                }
+            )
+        );
 
-To install this module, run the following commands:
+        # Make a rule to add to the set.  This rule's condition will be executed
+        # for each object.  If it returns a true value then the action will be
+        # executed for each object.
+        my $rule = Rule::Engine::Rule->new(
+            name => 'temperature',
+            action => sub {
+                my ($env, $obj) = @_;
+                $obj->happy(1);
+            },
+            condition => sub {
+                my ($env, $obj) = @_;
+                return $foo->favorite_temp == $env->get_environment('temperature');
+            }
+        );
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+        # Add the rule
+        $rs->add_rule($rule);
 
-SUPPORT AND DOCUMENTATION
+        # Add the ruleset to the session
+        $sess->add_ruleset($rs->name, $rs);
 
-After installing, you can find documentation for this module with the
-perldoc command.
+        # Execute the rule, getting back an arrayref of objects that passed the
+        # filter after running through all the rules whose conditions were met
+        my $results = $sess->execute('some-rule', \@list_of_objects);
 
-    perldoc Rule::Engine
+AUTHOR
+    Cory G Watson, "<gphat at cpan.org>"
 
-You can also look for information at:
+ACKNOWLEDGEMENTS
+COPYRIGHT & LICENSE
+    Copyright 2010 Cory G Watson.
 
-    RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Rule-Engine
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of either: the GNU General Public License as published
+    by the Free Software Foundation; or the Artistic License.
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Rule-Engine
-
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Rule-Engine
-
-    Search CPAN
-        http://search.cpan.org/dist/Rule-Engine/
-
-
-COPYRIGHT AND LICENCE
-
-Copyright (C) 2010 Cory G Watson
-
-This program is free software; you can redistribute it and/or modify it
-under the terms of either: the GNU General Public License as published
-by the Free Software Foundation; or the Artistic License.
-
-See http://dev.perl.org/licenses/ for more information.
+    See http://dev.perl.org/licenses/ for more information.
 
