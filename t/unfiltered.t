@@ -70,5 +70,4 @@ is($acct_low->credit_limit, 1000, 'limit for low score');
 is($acct_med->credit_limit, 5000, 'limit for medium score');
 is($acct_high->credit_limit, 10000, 'limie for high score');
 
-
 done_testing;

@@ -63,19 +63,7 @@ sub execute {
         $objects = \@objs;
     }
 
-    foreach my $obj (@{ $objects }) {
-        foreach my $rule (@{ $rs->rules }) {
-            $rule->execute($self, $obj) if $rule->evaluate($self, $obj);
-        }
-    }
-
-    return $objects unless $rs->has_filter;
-    my @returnable = ();
-    foreach my $obj (@{ $objects }) {
-        push(@returnable, $obj) if($rs->filter->check($obj));
-    }
-
-    return \@returnable;
+	return $rs->execute($self, $objects);
 }
 
 =head2 get_ruleset($name)

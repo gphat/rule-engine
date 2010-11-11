@@ -59,6 +59,28 @@ has 'rules' => (
 
 Add a rule
 
+=head2 execute
+
+=cut
+
+sub execute {
+    my ($self, $session, $objects) = @_;
+
+    foreach my $obj (@{ $objects }) {
+        foreach my $rule (@{ $self->rules }) {
+            $rule->execute($session, $obj) if $rule->evaluate($session, $obj);
+        }
+    }
+
+    return $objects unless $self->has_filter;
+    my @returnable = ();
+    foreach my $obj (@{ $objects }) {
+        push(@returnable, $obj) if($self->filter->check($obj));
+    }
+
+    return \@returnable;
+}
+
 =head2 rule_count
 
 Returns the number of rules for this session.
