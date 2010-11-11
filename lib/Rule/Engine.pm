@@ -9,6 +9,11 @@ Rule::Engine - A Rule Engine
 
 our $VERSION = '0.01';
 
+=head1 DESCRIPTION
+
+Rule::Engine is a system for creating sets of rules (RuleSets) and executing
+them against a list of objects.
+
 =head1 SYNOPSIS
 
     use Rule::Engine::Filter;
@@ -21,7 +26,7 @@ our $VERSION = '0.01';
 
     # Make a ruleset
     my $rs = Rule::Engine::RuleSet->new(
-        name => 'some-rule',
+        name => 'some-ruleset',
         filter => Rule::Engine::Filter->new(
             condition => sub {
                 # Check something here.  Any object that returns true will
@@ -36,13 +41,13 @@ our $VERSION = '0.01';
     # executed for each object.
     my $rule = Rule::Engine::Rule->new(
         name => 'temperature',
+        condition => sub {
+            my ($env, $obj) = @_;
+            return $obj->favorite_temp == $env->get_environment('temperature');
+        },
         action => sub {
             my ($env, $obj) = @_;
             $obj->happy(1);
-        },
-        condition => sub {
-            my ($env, $obj) = @_;
-            return $foo->favorite_temp == $env->get_environment('temperature');
         }
     );
 
@@ -54,7 +59,92 @@ our $VERSION = '0.01';
 
     # Execute the rule, getting back an arrayref of objects that passed the
     # filter after running through all the rules whose conditions were met
-    my $results = $sess->execute('some-rule', \@list_of_objects);
+    my $results = $sess->execute('some-ruleset', \@list_of_objects);
+
+=head1 CONCEPTS
+
+=head2 Rules
+
+Rules are made of a B<condition> and an B<action>.  If the condition evaluates
+to true for a given object, then the action is executed.
+
+	my $rule = Rule::Engine::Rule->new(
+	    name => 'check_score',
+	    condition => sub {
+	        my ($env, $obj) = @_;
+			# Test the score
+	        return $obj->score >= 59;
+	    },
+	    action => sub {
+	        my ($env, $obj) = @_;
+			# Passing score!
+        	$obj->pass(1);
+	    }
+	);
+
+Conditions and actions are executed individually for each object that is
+passed into the RuleSet.
+
+=head2 RuleSets
+
+RuleSets are collections of rules – executed in order – with an optional
+filter that removes objects that match (or don't match) a certain criteria
+after all the rules have been evaluated.
+
+	my $rs = Rule::Engine::RuleSet->new(
+	    name => 'some-ruleset',
+		# Completely optional filter
+	    filter => Rule::Engine::Filter->new(
+	        condition => sub {
+	            # Check something here.  Any object that returns true will
+	            # be kept.
+	            shift->is_something ? 1 : 0
+	        }
+	    )
+	);
+
+	$rs->add_rule(...);
+	$rs->add_rule(...);
+
+	my $results = $rs->execute(\@objects);
+
+The above example has two rules and a filter.  The filter removes any objects
+from the results B<after> the rules have been executed.  Since each rule
+might alter the object, the filter has a chance at the end to limit the returned
+objects to just those that have met certain criteria.  This might be useful to
+determine which students have passed an example, which items in a cart need
+to be removed or which customers have the appropriate attributes for a
+promotion.
+
+=head2 Session
+
+A session is a period of interaction with Rule::Engine.  The environment
+provides a collection of possible RuleSets and an environment hash.
+
+=head1 NOTES
+
+=head2 Filtered and Unfiltered
+
+There are two common use-cases for a RuleSet: filtered and unfiltered. Filtered
+RuleSets are primarily used for binary problem.  If you need to evaluate some
+rules and then eliminate some items, this is how you do it.  This seems (to me
+at least) fairly obvious.  The other option, less so.
+
+Unfiltered RuleSets don't eliminate anyone and in my uses are often not used
+with multiple input objects.  A great example of this is calculating a credit
+limit for a credit application.  There's nothing to eliminate, in this case.
+We want to first decide if the customer is eligible for credit and then, based
+on various attributes, decide how much credit to give them.  A single Application
+object may be passed in and attributes tested and set.  If the credit score is
+too low, then the limit may be set to 0.  Afterward, there's no reason for a
+filter.  We just want to know what the value of C<Account->limit> turned out
+to be.
+
+The point of this documentation blurb is to illustrate that Rule::Engine is
+useful in terms of deciding I<how> to do something, not just I<which> objects
+to do something to.
+
+=back
 
 =head1 AUTHOR
 
