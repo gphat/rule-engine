@@ -1,6 +1,8 @@
 use strict;
 use Test::More;
 
+use lib 't/lib';
+
 use Rule::Engine::Filter;
 use Rule::Engine::Rule;
 use Rule::Engine::RuleSet;

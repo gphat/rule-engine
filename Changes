@@ -1,5 +1,8 @@
 Revision history for Rule-Engine
 
+0.02	2010-11-17
+		Fix busted tests
+
 0.01    2010-11-11
         First version, released on an unsuspecting world.
 
