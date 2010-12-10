@@ -1,6 +1,10 @@
 package Rule::Engine::Session;
 use Moose;
 
+=head1 NAME
+
+Rule::Engine::Session - A Rule Engine Session
+
 =head1 ATTRIBUTES
 
 =head2 environment

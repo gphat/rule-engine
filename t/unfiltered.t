@@ -20,11 +20,11 @@ $rs->add_rule(
 	Rule::Engine::Rule->new(
 	    name => 'low-score',
 	    condition => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 	        return $obj->credit_score <= 300;
 	    },
 	    action => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 			$obj->credit_limit(1000);
 	    }
 	)
@@ -33,11 +33,11 @@ $rs->add_rule(
 	Rule::Engine::Rule->new(
 	    name => 'med-score',
 	    condition => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 	        return $obj->credit_score >= 500;
 	    },
 	    action => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 			$obj->credit_limit(5000);
 	    }
 	)
@@ -46,11 +46,11 @@ $rs->add_rule(
 	Rule::Engine::Rule->new(
 	    name => 'high-score',
 	    condition => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 	        return $obj->credit_score >= 700;
 	    },
 	    action => sub {
-	        my ($env, $obj) = @_;
+	        my ($self, $env, $obj) = @_;
 			$obj->credit_limit(10000);
 	    }
 	)

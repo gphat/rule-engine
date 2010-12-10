@@ -1,5 +1,9 @@
 Revision history for Rule-Engine
 
+0.03    2010-12-10
+        Use execute_method with code attrs so that self can be used
+        POD improvements
+
 0.02	2010-11-17
 		Fix busted tests
 

@@ -1,6 +1,10 @@
 package Rule::Engine::RuleSet;
 use Moose;
 
+=head1 NAME
+
+Rule::Engine::RuleSet - A Set of Rules
+
 =head1 ATTRIBUTES
 
 =head2 filter

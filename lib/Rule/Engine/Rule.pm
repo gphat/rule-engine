@@ -19,7 +19,7 @@ has 'action' => (
     traits => [ 'Code' ],
     required => 1,
     handles => {
-        execute => 'execute'
+        execute => 'execute_method'
     }
 );
 
@@ -35,7 +35,7 @@ has 'condition' => (
     traits => [ 'Code' ],
     required => 1,
     handles => {
-        evaluate => 'execute'
+        evaluate => 'execute_method'
     }
 );
 

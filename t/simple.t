@@ -17,7 +17,7 @@ my $rs = Rule::Engine::RuleSet->new(
     name => 'find-happy-tribbles',
     filter => Rule::Engine::Filter->new(
         condition => sub {
-            shift->happy ? 1 : 0
+            $_[1]->happy ? 1 : 0
         }
     )
 );
@@ -25,11 +25,11 @@ my $rs = Rule::Engine::RuleSet->new(
 my $rule = Rule::Engine::Rule->new(
     name => 'temperature',
     action => sub {
-        my ($env, $obj) = @_;
+        my ($Self, $env, $obj) = @_;
         $obj->happy(1);
     },
     condition => sub {
-        my ($env, $obj) = @_;
+        my ($self, $env, $obj) = @_;
         return $obj->favorite_temp == $env->get_environment('temperature');
     }
 );

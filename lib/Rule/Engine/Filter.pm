@@ -21,7 +21,7 @@ has 'condition' => (
     required => 1,
     traits => [ 'Code' ],
     handles => {
-        check => 'execute'
+        check => 'execute_method'
     }
 );
 
