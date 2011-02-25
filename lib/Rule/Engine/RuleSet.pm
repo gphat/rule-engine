@@ -79,7 +79,7 @@ sub execute {
     return $objects unless $self->has_filter;
     my @returnable = ();
     foreach my $obj (@{ $objects }) {
-        push(@returnable, $obj) if($self->filter->check($obj));
+        push(@returnable, $obj) if($self->filter->check($self, $obj));
     }
 
     return \@returnable;

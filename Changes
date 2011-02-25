@@ -1,5 +1,8 @@
 Revision history for Rule-Engine
 
+0.05    2011-02-25
+        Pass session to filter condition (does what the docs say now)
+
 0.04    2011-02-25
         POD improvements
 
