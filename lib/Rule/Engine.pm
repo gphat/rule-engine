@@ -7,7 +7,7 @@ Rule::Engine - A Rule Engine
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 DESCRIPTION
 
@@ -30,8 +30,9 @@ them against a list of objects.
         filter => Rule::Engine::Filter->new(
             condition => sub {
                 # Check something here.  Any object that returns true will
-                # be kept. Args are $self and the object
-                $_[1]->happy ? 1 : 0
+                # be kept. Args are $self, $session and the object
+                my ($self, $sess, $obj)
+                $obj->happy ? 1 : 0
             }
         )
     );
@@ -42,11 +43,11 @@ them against a list of objects.
     my $rule = Rule::Engine::Rule->new(
         name => 'temperature',
         condition => sub {
-            my ($self, $env, $obj) = @_;
-            return $obj->favorite_temp == $env->get_environment('temperature');
+            my ($self, $sess, $obj) = @_;
+            return $obj->favorite_temp == $sess->get_environment('temperature');
         },
         action => sub {
-            my ($self, $env, $obj) = @_;
+            my ($self, $sess, $obj) = @_;
             $obj->happy(1);
         }
     );
@@ -71,12 +72,12 @@ to true for a given object, then the action is executed.
 	my $rule = Rule::Engine::Rule->new(
 	    name => 'check_score',
 	    condition => sub {
-	        my ($self, $env, $obj) = @_;
+	        my ($self, $sess, $obj) = @_;
 			# Test the score
 	        return $obj->score >= 59;
 	    },
 	    action => sub {
-	        my ($self, $env, $obj) = @_;
+	        my ($self, $sess, $obj) = @_;
 			# Passing score!
         	$obj->pass(1);
 	    }

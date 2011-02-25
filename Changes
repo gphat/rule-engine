@@ -1,5 +1,8 @@
 Revision history for Rule-Engine
 
+0.04    2011-02-25
+        POD improvements
+
 0.03    2010-12-10
         Use execute_method with code attrs so that self can be used
         POD improvements

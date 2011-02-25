@@ -9,7 +9,13 @@ Rule::Engine::Rule - A Rule Engine Rule
 
 =head2 action
 
-The action that this rule will perform if it's condition is met.
+The action that this rule will perform if it's condition is met.  The action
+is invoked as a method and will receive two additional arguments: an instance
+of the L<Rule::Engine::Session> in which it is running and the object that is
+was tested.  So your first line (if you care about arguments) will need to
+be:
+
+  my ($self, $sess, $obj) = @_;
 
 =cut
 
@@ -25,7 +31,13 @@ has 'action' => (
 
 =head2 condition
 
-The condition which must be met for this rule's action to be fired.
+The condition which must be met for this rule's action to be fired.  The
+condition is invoked as a method and will receive two additional arguments: an
+instance of the L<Rule::Engine::Session> in which it is running and the object
+that is being tested.  So your first line (if you care about arguments) will
+need to be:
+
+  my ($self, $sess, $obj) = @_;
 
 =cut
 
