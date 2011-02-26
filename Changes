@@ -1,5 +1,8 @@
 Revision history for Rule-Engine
 
+0.06    2011-02-26
+        Fix Filter's condition not getting the correct arguments.
+
 0.05    2011-02-25
         Pass session to filter condition (does what the docs say now)
 

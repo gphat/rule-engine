@@ -17,7 +17,8 @@ my $rs = Rule::Engine::RuleSet->new(
     name => 'find-happy-tribbles',
     filter => Rule::Engine::Filter->new(
         condition => sub {
-            $_[1]->happy ? 1 : 0
+            my ($self, $session, $obj) = @_;
+            $obj->happy ? 1 : 0
         }
     )
 );

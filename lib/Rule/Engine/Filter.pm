@@ -13,6 +13,13 @@ A coderef that will receive each post-rule object (in turn) and evaluate it.
 If the condition returns true then the object will be returned as having passed
 the rule.  If it returns false then it will not.
 
+  Rule::Engine::Filter->new(
+      condition => sub {
+          my ($self, $session, $obj) = @_;
+          $obj->happy ? 1 : 0
+      }
+  );
+
 =cut
 
 has 'condition' => (

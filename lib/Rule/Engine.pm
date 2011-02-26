@@ -7,7 +7,7 @@ Rule::Engine - A Rule Engine
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 DESCRIPTION
 
@@ -31,7 +31,7 @@ them against a list of objects.
             condition => sub {
                 # Check something here.  Any object that returns true will
                 # be kept. Args are $self, $session and the object
-                my ($self, $sess, $obj)
+                my ($self, $sess, $obj);
                 $obj->happy ? 1 : 0
             }
         )
